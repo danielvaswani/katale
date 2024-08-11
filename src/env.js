@@ -26,7 +26,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    SERVICE_ACCOUNT: z.unknown(),
+    SERVICE_ACCOUNT: process.env.SERVICE_ACCOUNT,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
