@@ -34,7 +34,7 @@ def daily():
 		db.collection("day").document(word_of_the_day).set({"day": day_count+1, "word":word_of_the_day})
 
 class handler(BaseHTTPRequestHandler):
-	def do_POST(self):
+	def do_GET(self):
 		key = os.environ.get('CRON_SECRET')
 
 		if self.headers.get('Authorization') == None:
