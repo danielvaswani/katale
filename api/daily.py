@@ -7,13 +7,9 @@ import os
 import json
 from http.server import BaseHTTPRequestHandler
 
-class handler(BaseHTTPRequestHandler):
-	def do_POST(self):
-	# Use a service account.
+def daily():
 		cred = credentials.Certificate(json.loads(os.environ.get('SERVICE_ACCOUNT')))
-
 		app = firebase_admin.initialize_app(cred)
-
 		db = firestore.client()
 
 		count = db.collection('word').count().get()[0][0].value
@@ -37,7 +33,22 @@ class handler(BaseHTTPRequestHandler):
 		day_count =  db.collection('day').count().get()[0][0].value
 		db.collection("day").document(word_of_the_day).set({"day": day_count+1, "word":word_of_the_day})
 
-		self.send_response(200)
-		self.send_header('Content-type','text/plain')
-		self.end_headers()
+class handler(BaseHTTPRequestHandler):
+	def do_POST(self):
+		key = os.environ.get('CRON_SECRET')
+
+		if self.headers.get('Authorization') == None:
+			self.do_AUTHHEAD()
+			response = {
+				'success': False,
+				'error': 'No auth header received'
+			}
+			self.wfile.write(bytes(json.dumps(response), 'utf-8'))
+
+		elif self.headers.get('Authorization') == 'Bearer ' + str(key):
+			daily()
+			self.send_response(200)
+			self.send_header('Content-type', 'application/json')
+			self.end_headers()
+
 		return
