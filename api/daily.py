@@ -38,6 +38,6 @@ class handler(BaseHTTPRequestHandler):
 		db.collection("day").document(word_of_the_day).set({"day": day_count+1, "word":word_of_the_day})
 
 		self.send_response(200)
-	    self.send_header('Content-type','text/plain')
-	    self.end_headers()
-	    return
+		self.send_header('Content-type','text/plain')
+		self.end_headers()
+		return
