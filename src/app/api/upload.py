@@ -3,9 +3,11 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from time import sleep
 from re import match
+import os
+import json
 
 # Use a service account.
-cred = credentials.Certificate('serviceAccount.json')
+cred = credentials.Certificate(json.loads(os.environ.get('SERVICE_ACCOUNT')))
 
 app = firebase_admin.initialize_app(cred)
 
@@ -15,7 +17,7 @@ batch = db.batch()
 
 index = 0
 
-f = open("wordlist.txt", "r")
+# f = open("wordlist.txt", "r")
 
 for x in f:
 	if(match('^[a-z]{5}\n$', x)):
@@ -24,4 +26,4 @@ for x in f:
 		index = index + 1
 
 
-batch.commit()
+# batch.commit() UNCOMMENT WHEN READY
