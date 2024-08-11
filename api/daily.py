@@ -32,6 +32,7 @@ def daily():
 
 		day_count =  db.collection('day').count().get()[0][0].value
 		db.collection("day").document(word_of_the_day).set({"day": day_count+1, "word":word_of_the_day})
+		firebase_admin.delete_app(app);
 
 class handler(BaseHTTPRequestHandler):
 	def do_GET(self):
