@@ -81,7 +81,7 @@ export default function Page() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://https://katale-xi.vercel.app/api/today");
+      const res = await fetch("https://katale-xi.vercel.app/api/today");
       return res;
     };
 
