@@ -58,7 +58,7 @@ export default function Page() {
     row.toUpperCase().split(""),
   );
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = (event: { keyCode: number; }) => {
     switch (event.keyCode) {
       case 13:
         // RETURN is 13
@@ -88,7 +88,7 @@ export default function Page() {
     fetchData()
       .then((data) => {
         console.log(data);
-        setWordOfTheDay(data);
+        // setWordOfTheDay(data);
       })
       .catch((error) => console.log(error))
       .finally(() => setIsLoading(false));
