@@ -6,6 +6,19 @@ export default function Page() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [keyboardHidden, setKeyboardHidden] = useState(false);
 
+  const getColor = (letter: string) => {
+    if (greens.indexOf(letter) > -1) {
+      return "bg-green-300";
+    }
+    if (yellows.indexOf(letter) > -1) {
+      return "bg-yellow-300";
+    }
+    if (grays.indexOf(letter) > -1) {
+      return "bg-gray-300";
+    }
+    return "bg-white";
+  };
+
   const checkRow = (checkWord: string[]) => {
     const wordOfTheDayArray = wordOfTheDay.toUpperCase().split("");
     console.log(wordOfTheDay);
@@ -14,17 +27,15 @@ export default function Page() {
       .map((letter) => ({
         letter: letter,
         // total greens - yellows
-        // greens: checkWord.filter(
-        //   (l, lIndex) =>
-        //     checkWord[lIndex] === wordOfTheDayArray[lIndex] && l === letter,
-        // ).length,
-        // possibleYellows: checkWord
-        //   .map((letter) =>
-        //     wordOfTheDayArray.indexOf(letter) > -1 ? letter : "-",
-        //   )
-        //   .filter((item) => item === letter).length,
-        // possibleGreens: wordOfTheDayArray.filter((item) => item == letter)
-        //   .length,
+        greens: checkWord.filter(
+          (l, lIndex) =>
+            checkWord[lIndex] === wordOfTheDayArray[lIndex] && l === letter,
+        ).length,
+        possibleYellows: checkWord
+          .map((letter) =>
+            wordOfTheDayArray.indexOf(letter) > -1 ? letter : "-",
+          )
+          .filter((item) => item === letter).length,
         yellows:
           wordOfTheDayArray.filter((item) => item == letter).length -
           checkWord.filter(
@@ -32,9 +43,12 @@ export default function Page() {
               checkWord[lIndex] === wordOfTheDayArray[lIndex] && l === letter,
           ).length,
       }));
-    console.log(letterAnalysis);
+    // console.log(letterAnalysis);
     // eslint-disable-next-line prefer-const
     let yellowsToAdd = [];
+    const yellowsInWord = new Set<string>();
+    const greensInWord = new Set<string>();
+    const graysInWord = new Set<string>();
     // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let i = 0; i < letterAnalysis.length; i++) {
       for (let o = 0; o < letterAnalysis[i]!.yellows; o++) {
@@ -45,17 +59,30 @@ export default function Page() {
 
     const colors = [];
     for (let i = 0; i < checkWord.length; i++) {
-      if (checkWord[i] === wordOfTheDayArray[i]) colors.push("bg-green-300");
-      else if (yellowsToAdd.indexOf(checkWord[i]!) > -1) {
+      if (checkWord[i] === wordOfTheDayArray[i]) {
+        greensInWord.add(checkWord[i]!);
+        colors.push("bg-green-300");
+      } else if (yellowsToAdd.indexOf(checkWord[i]!) > -1) {
         for (let o = 0; o < yellowsToAdd.length; o++) {
           if (checkWord[i] === yellowsToAdd[o]) {
+            yellowsInWord.add(checkWord[i]!);
             colors.push("bg-yellow-300");
             yellowsToAdd.splice(o, 1);
             break;
           }
         }
-      } else colors.push("bg-gray-300");
+      } else {
+        graysInWord.add(checkWord[i]!);
+        colors.push("bg-gray-300");
+      }
     }
+    yellows.forEach((y) => yellowsInWord.add(y));
+    greens.forEach((g) => greensInWord.add(g));
+    grays.forEach((g) => graysInWord.add(g));
+
+    setYellows([...Array.from(yellowsInWord)]);
+    setGreens([...Array.from(greensInWord)]);
+    setGrays([...Array.from(graysInWord)]);
     return colors;
   };
 
@@ -86,7 +113,6 @@ export default function Page() {
     );
     setCurrentIndex(0);
     setCurrentRow(currentRow + 1);
-    // setYellowz([])
   };
 
   const handleBackspaceClick = () => {
@@ -156,6 +182,9 @@ export default function Page() {
 
   const [words, setWords] = useState<string[][]>([]);
   const [colors, setColors] = useState<string[][]>([]);
+  const [yellows, setYellows] = useState<string[]>([]);
+  const [greens, setGreens] = useState<string[]>([]);
+  const [grays, setGrays] = useState<string[]>([]);
 
   if (isLoading) return <p>Loading...</p>;
   if (!wordOfTheDay) return <p>No word found</p>;
@@ -188,7 +217,7 @@ export default function Page() {
                     <div
                       key={keyIndex}
                       onClick={() => handleLetterClick(keyboardKey)}
-                      className="flex h-14 w-12 items-center justify-center rounded-sm border"
+                      className={`flex h-14 w-12 items-center justify-center rounded-sm border ${getColor(keyboardKey)}`}
                     >
                       {keyboardKey === "-" ? "" : keyboardKey}
                     </div>
@@ -209,21 +238,21 @@ export default function Page() {
               {"<-"}
             </div>
           </div>
-          {/* <div
+          <div
             onClick={() => setKeyboardHidden(!keyboardHidden)}
             className="border p-4"
           >
-            HIDE
-          </div> */}
+            HIDE KEYBOARD
+          </div>
         </>
       ) : (
         <>
-          {/* <div
+          <div
             onClick={() => setKeyboardHidden(!keyboardHidden)}
             className="border p-4"
           >
-            UNHIDE
-          </div> */}
+            SHOW KEYBOARD
+          </div>
         </>
       )}
     </div>
