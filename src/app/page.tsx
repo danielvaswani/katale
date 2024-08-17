@@ -196,7 +196,7 @@ export default function Page() {
       className="flex h-full select-none flex-col items-center justify-center gap-4"
     >
       {words.map((currentWord, wordIndex) => (
-        <div key={wordIndex} className="flex gap-4 text-black">
+        <div key={wordIndex} className="flex gap-2 text-black">
           {currentWord.map((letter, letterIndex) => (
             <div
               key={letterIndex}
@@ -212,12 +212,12 @@ export default function Page() {
           <div className="relative">
             <div className="flex flex-col items-center justify-center gap-2">
               {keyboardLayout.map((layoutRow, layoutRowIndex) => (
-                <div key={layoutRowIndex} className="flex gap-3 text-black">
+                <div key={layoutRowIndex} className={`flex gap-1 text-black`}>
                   {layoutRow.map((keyboardKey, keyIndex) => (
                     <div
                       key={keyIndex}
                       onClick={() => handleLetterClick(keyboardKey)}
-                      className={`flex h-14 w-12 items-center justify-center rounded-sm border ${getColor(keyboardKey)}`}
+                      className={`flex h-14 w-[1.9rem] items-center justify-center rounded-sm border ${getColor(keyboardKey)}`}
                     >
                       {keyboardKey === "-" ? "" : keyboardKey}
                     </div>
@@ -227,13 +227,13 @@ export default function Page() {
             </div>
             <div
               onClick={handleEnterClick}
-              className="absolute bottom-0 right-0 flex h-14 w-20 items-center justify-center rounded-sm border"
+              className="absolute text-xs bottom-0 left-0 flex h-14 w-12 items-center justify-center rounded-sm border"
             >
               ENTER
             </div>
             <div
               onClick={handleBackspaceClick}
-              className="absolute bottom-0 left-0 flex h-14 w-20 items-center justify-center rounded-sm border"
+              className="absolute bottom-0 right-0 flex h-14 w-12 items-center justify-center rounded-sm border"
             >
               {"<-"}
             </div>
